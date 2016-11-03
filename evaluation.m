@@ -30,7 +30,7 @@ xMax = 0;
 grid on;
 for i = 1:size(testFiles,2)
     [gt,dt] = bbGt( 'myLoadAll', groundtruth,testFiles{i},pLoad);
-    thr = 0.1;
+    thr = 0.5;
     [gt,dt] = bbGt('evalRes',gt,dt,thr,0);
     [xs,ys] = bbGt('compRoc',gt,dt,1);
     ys = 1 - ys;
