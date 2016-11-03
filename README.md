@@ -9,7 +9,7 @@
 
 这里只是给出个示例，具体项目可以具体有不同的写法
 
-为了能够成功运行，需要把https://github.com/huangshiyu13/toolbox项目并行放在一起
+为了能够成功运行，需要把https://github.com/huangshiyu13/toolbox 项目并行放在一起
 
 ## 程序清单
 evaluation.m 这个程序就是读入结果文件，画出roc曲线
