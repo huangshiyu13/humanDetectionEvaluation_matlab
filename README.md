@@ -16,13 +16,21 @@ evaluation.m 这个程序就是读入结果文件，画出roc曲线
 
 
 configure/draw.cfg 
+
 例子：
+
 ../../DATA/dangerousFinal/allResizedAno
+
 result/syntheticDataAll_InriaBkg/bbout syntheticDataAll_InriaBkg g-
+
 result/syntheticDataAll/bbout syntheticDataAll m-
+
 result/Caltech2500/bbout Caltech2500 c--
+
 result/Mix_Caltech2500/bbout Mix_Caltech2500 r-
+
 result/Caltech1000/bbout Caltech1000 b-
+
 result/Mix_Caltech1000/bbout Mix_Caltech1000 b--
 
 images用于存储roc图片
