@@ -3,7 +3,7 @@ close all
 p = genpath('../toolbox');
 addpath(p);
 
-fid1=fopen('configure/draw.cfg');
+fid1=fopen('configure/draw_test.cfg');
 groundtruth = '';
 testFiles={};
 testNames={};
