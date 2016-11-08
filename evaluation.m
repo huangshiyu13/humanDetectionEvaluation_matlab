@@ -3,7 +3,7 @@ close all
 p = genpath('../toolbox');
 addpath(p);
 
-fid1=fopen('configure/draw_test.cfg');
+fid1=fopen('configure/draw_list.cfg');
 groundtruth = '';
 testFiles={};
 testNames={};
@@ -12,7 +12,9 @@ i = 0;
 while ~feof(fid1)
     aline=fgetl(fid1);
     if i == 0,
-        groundtruth = aline;
+        strs = regexp(aline, ' ', 'split');
+        groundtruth = strs{1};
+        saveImgName = strs{2};
     else
        strs = regexp(aline, ' ', 'split');
        testFiles{i} = strs{1}; 
@@ -52,4 +54,4 @@ xlim([0 xMax]);
 ylim([yMin, 1]);
 
 legend(testNames,'Location','sw');
-saveas(gcf,'images/testDangerous.jpg');
+saveas(gcf,saveImgName);
