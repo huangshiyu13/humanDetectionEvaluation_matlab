@@ -3,7 +3,7 @@ close all
 p = genpath('../toolbox');
 addpath(p);
 
-fid1=fopen('configure/draw_list.cfg');
+fid1=fopen('configure/draw_compare_real.cfg');
 groundtruth = '';
 testFiles={};
 testNames={};
@@ -11,6 +11,7 @@ type={};
 i = 0;
 while ~feof(fid1)
     aline=fgetl(fid1);
+    aline
     if i == 0,
         strs = regexp(aline, ' ', 'split');
         groundtruth = strs{1};
@@ -18,6 +19,7 @@ while ~feof(fid1)
     else
        strs = regexp(aline, ' ', 'split');
        testFiles{i} = strs{1}; 
+       
        testNames{i} = strs{2};
        type{i} = strs{3};
     end
@@ -30,11 +32,17 @@ figure(1)
 yMin = 100;
 xMax = 0;
 grid on;
+
+samples = 10.^(-2:.25:0); % samples for computing area under the curve log-average miss rate
+plotRoc = 1;
 for i = 1:size(testFiles,2)
     [gt,dt] = bbGt( 'myLoadAll', groundtruth,testFiles{i},pLoad);
     thr = 0.5;
     [gt,dt] = bbGt('evalRes',gt,dt,thr,0);
-    [xs,ys] = bbGt('compRoc',gt,dt,1);
+    [xs,ys,~,score] = bbGt('compRoc',gt,dt,plotRoc, samples );
+    if(plotRoc),  score=1-score; end
+    if(plotRoc), score=exp(mean(log(score))); else score=mean(score); end
+    disp(score)
     ys = 1 - ys;
     hold on;
     plot(xs,ys,type{i},'LineWidth',3);
@@ -54,4 +62,4 @@ xlim([0 xMax]);
 ylim([yMin, 1]);
 
 legend(testNames,'Location','sw');
-saveas(gcf,saveImgName);
+% saveas(gcf,saveImgName);
