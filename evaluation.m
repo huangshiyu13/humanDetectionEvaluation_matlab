@@ -3,7 +3,7 @@ close all
 p = genpath('../toolbox');
 addpath(p);
 
-fid1=fopen('configure/draw_compare_real.cfg');
+fid1=fopen('configure/draw_method.cfg');
 groundtruth = '';
 testFiles={};
 testNames={};
@@ -11,7 +11,6 @@ type={};
 i = 0;
 while ~feof(fid1)
     aline=fgetl(fid1);
-    aline
     if i == 0,
         strs = regexp(aline, ' ', 'split');
         groundtruth = strs{1};
@@ -37,12 +36,12 @@ samples = 10.^(-2:.25:0); % samples for computing area under the curve log-avera
 plotRoc = 1;
 for i = 1:size(testFiles,2)
     [gt,dt] = bbGt( 'myLoadAll', groundtruth,testFiles{i},pLoad);
-    thr = 0.5;
+    thr = 0.7;
     [gt,dt] = bbGt('evalRes',gt,dt,thr,0);
     [xs,ys,~,score] = bbGt('compRoc',gt,dt,plotRoc, samples );
     if(plotRoc),  score=1-score; end
     if(plotRoc), score=exp(mean(log(score))); else score=mean(score); end
-    disp(score)
+    disp({testNames{i},score});
     ys = 1 - ys;
     hold on;
     plot(xs,ys,type{i},'LineWidth',3);
@@ -61,5 +60,5 @@ title('ROC');
 xlim([0 xMax]);
 ylim([yMin, 1]);
 
-legend(testNames,'Location','sw');
+legend(testNames,'Position',[0.15,0.22,0.31,0.2],'FontSize',11,'FontWeight','bold');
 % saveas(gcf,saveImgName);
