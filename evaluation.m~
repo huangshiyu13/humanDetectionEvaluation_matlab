@@ -2,8 +2,8 @@ clear all
 close all
 p = genpath('../toolbox');
 addpath(p);
-thr = 0.7;
-figTitle = 'Overlap Ratio = 0.70';
+thr = 0.5;
+figTitle = 'Overlap Ratio = 0.50'
 fid1=fopen('configure/draw_method.cfg');
 groundtruth = '';
 testFiles={};
