@@ -1,10 +1,14 @@
-clear all
+for thr = 0.5:0.1:0.7
+
 close all
 p = genpath('../toolbox');
 addpath(p);
-thr = 0.7;
-figTitle = 'Overlap Ratio = 0.70';
-fid1=fopen('configure/draw_method.cfg');
+
+configFile = 'configure/draw_num.cfg';
+
+figTitle = ['Overlap Ratio = ' num2str(thr)];
+
+fid1=fopen(configFile);
 groundtruth = '';
 testFiles={};
 testNames={};
@@ -15,16 +19,22 @@ while ~feof(fid1)
     if i == 0,
         strs = regexp(aline, ' ', 'split');
         groundtruth = strs{1};
-        saveImgName = strs{2};
+        imageNow = strs{2};
     else
        strs = regexp(aline, ' ', 'split');
+       if length(strs) <= 2
+           break;
+       end
        testFiles{i} = strs{1}; 
        
        testNames{i} = strs{2};
        type{i} = strs{3};
     end
+    
     i=i+1;
 end
+saveImgPath = ['../../cvprPaper/supplementary/images/' imageNow '_' num2str(thr) '.eps'];
+
 fclose(fid1);
 pLoad={'lbls',{'person'},'ilbls',{'people'},'squarify',{3,.41},'hRng',[50 inf]};
 p = {};
@@ -35,30 +45,40 @@ grid on;
 
 samples = 10.^(-2:.25:0); % samples for computing area under the curve log-average miss rate
 plotRoc = 1;
+scores = zeros(length(testNames),1);
 for i = 1:size(testFiles,2)
     [gt,dt] = bbGt( 'myLoadAll', groundtruth,testFiles{i},pLoad);
     [gt,dt] = bbGt('evalRes',gt,dt,thr,0);
     [xs,ys,~,score] = bbGt('compRoc',gt,dt,plotRoc, samples );
     if(plotRoc),  score=1-score; end
     if(plotRoc), score=exp(mean(log(score))); else score=mean(score); end
-    disp({testNames{i},score});
+    disp({testNames{i},score*100});
+    scores(i) = roundn(score*100,-2);
     ys = 1 - ys;
     hold on;
     plot(xs,ys,type{i},'LineWidth',3);
     yMin=min(yMin,min(ys)); 
     xMax=max(xMax,max(xs));
-    xlabel('false positives per image','FontSize',14);
-    ylabel('miss rate','FontSize',14);
+    
 end
+
+xlabel('false positives per image','FontSize',18,'FontWeight','bold');
+    ylabel('miss rate','FontSize',18,'FontWeight','bold');
+
 yt=[.05 .1:.1:.5 .64 .8]; ytStr=int2str2(yt*100,2);
 for i=1:length(yt), ytStr{i}=['.' ytStr{i}]; end
 set(gca,'XScale','log','YScale','log',...
         'YTick',[yt 1],'YTickLabel',[ytStr '1'],...
         'XMinorGrid','off','XMinorTic','off',...
         'YMinorGrid','off','YMinorTic','off');
-title(figTitle);
+title(figTitle,'FontSize',14);
 xlim([0 xMax]);
 ylim([yMin, 1]);
 
-legend(testNames,'Position',[0.15,0.15,0.21,0.2],'FontSize',11,'FontWeight','bold');
-% saveas(gcf,saveImgName);
+for i = 1:length(testNames)
+    testNames{i} = [num2str(scores(i)) '% ' testNames{i} ];
+end
+
+legend(testNames,'Position',[0.15,0.15,0.30,0.2],'FontSize',14,'FontWeight','bold');
+saveas(gcf,saveImgPath,'psc2');
+end
