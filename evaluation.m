@@ -4,7 +4,7 @@ close all
 p = genpath('../toolbox');
 addpath(p);
 
-configFile = 'configure/draw_progress.cfg';
+configFile = 'configure/draw_compare_syn.cfg';
 
 figTitle = ['Overlap Ratio = ' num2str(thr)];
 

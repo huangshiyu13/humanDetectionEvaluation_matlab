@@ -4,8 +4,9 @@ p = genpath('../../DATA/code3.2.1');
 addpath(p);
 clear all;
 
-common = 'caltech_keep_1.1_final';
-anoDir = ['../../ATOCAR_CNN/results/rpn/' common '/'];
+common = 'ldcf';
+% anoDir = ['../../ATOCAR_CNN/results/rpn/' common '/'];
+anoDir = ['../ACF/result/LdcfCaltech_caltechTest/bbout'];
 saveName = ['../../DATA/Caltech/res/dt-' common '.mat'];
 evasaveName = ['../../DATA/Caltech/res/ev-' common '.mat'];
 stra=common; 
