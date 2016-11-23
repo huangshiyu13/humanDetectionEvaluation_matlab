@@ -4,7 +4,7 @@ close all
 p = genpath('../toolbox');
 addpath(p);
 
-configFile = 'configure/draw_acf.cfg';
+configFile = 'configure/draw_compare_syn.cfg';
 
 figTitle = ['Overlap Ratio = ' num2str(thr)];
 
@@ -26,7 +26,6 @@ while ~feof(fid1)
            break;
        end
        testFiles{i} = strs{1}; 
-       
        testNames{i} = strs{2};
        type{i} = strs{3};
     end
@@ -79,6 +78,6 @@ for i = 1:length(testNames)
     testNames{i} = [num2str(scores(i)) '% ' testNames{i} ];
 end
 
-legend(testNames,'Position',[0.15,0.15,0.30,0.2],'FontSize',14,'FontWeight','bold');
+legend(testNames,'Position',[0.17,0.18,0.30,0.2],'FontSize',14,'FontWeight','bold');
 saveas(gcf,saveImgPath,'psc2');
 end

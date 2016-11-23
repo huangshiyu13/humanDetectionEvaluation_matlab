@@ -9,17 +9,14 @@ figTitle = ['Overlap Ratio = ' num2str(thr)];
 saveImgPath = ['../../cvprPaper/supplementary/images/caltech_' num2str(thr) '.eps'];
 
 resDir = '../../DATA/Caltech/res/';
-resfiles = {'ev-haar.mat',...
-            'ev-Reasonable-VJ.mat',...
-            'ev-Reasonable-HOG.mat',...
-            'ev-Reasonable-ACF.mat',...
-            'ev-Reasonable-MT-DPM.mat',...
-            'ev-ldcf.mat',...
-            'ev-Reasonable-Checkerboards.mat',...
-            'ev-rpn_origin.mat'};
-types = {'c--','b--','r-','m-','y-','g-','c-','b-'};
+resfiles = {'dt-haar.mat',...
+            'dt-HOG.mat',...
+            'dt-ACF.mat',...
+            'dt-LDCF.mat',...
+            'dt-rpn_origin.mat'};
+types = {'r-','m-','y-','g-','c-'};
 
-names = {'HAAR','VJ','HOG','ACF','MT-DPM','LDCF','Checkerboards','Ours'};
+names = {'HAAR','HOG','ACF','LDCF','RPN+Caltech'};
 n = length(resfiles);
 assert(n == length(types));
 res=cell(1,n);
@@ -27,11 +24,14 @@ res=cell(1,n);
 gts = cell(1,n);
 dts = cell(1,n);
 
+gtnow =  load('../../DATA/Caltech/res/gt-Reasonable.mat');
+gtnow = gtnow.gt;
+
 for i = 1:n
     res{i} = load([resDir '/' resfiles{i}]);
 %     names{i} = res{i}.R.stra;
-    gts{i} = res{i}.R.gtr;
-    dts{i} = res{i}.R.dtr;
+    gts{i} = gtnow;
+    dts{i} = res{i}.dt;
 end
 
 yMin = 100;
@@ -43,7 +43,8 @@ scores = zeros(length(names),1);
 
 for i = 1:n
     disp(names{i});
-    [xs,ys,~,score] = bbGt('compRoc',gts{i},dts{i},plotRoc, samples);
+    [gt,dt] = bbGt('evalRes',gts{i},dts{i},thr,0);
+    [xs,ys,~,score] = bbGt('compRoc',gt,dt,plotRoc, samples);
     if(plotRoc),  score=1-score; end
     if(plotRoc), score=exp(mean(log(score))); else score=mean(score); end
     scores(i) = roundn(score*100,-2);
