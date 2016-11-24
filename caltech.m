@@ -11,12 +11,14 @@ saveImgPath = ['../../cvprPaper/supplementary/images/caltech_' num2str(thr) '.ep
 resDir = '../../DATA/Caltech/res/';
 resfiles = {'dt-haar.mat',...
             'dt-HOG.mat',...
+            'dt-OursTestOnCaltech.mat',...
             'dt-ACF.mat',...
             'dt-LDCF.mat',...
-            'dt-rpn_origin.mat'};
-types = {'r-','m-','y-','g-','c-'};
+            'dt-rpn_origin.mat'
+            };
+types = {'r-','m-','b--','y-','g-','b-'};
 
-names = {'HAAR','HOG','ACF','LDCF','RPN+Caltech'};
+names = {'HAAR','HOG','RPN+Precarious','ACF','LDCF','RPN+Caltech'};
 n = length(resfiles);
 assert(n == length(types));
 res=cell(1,n);
@@ -74,5 +76,6 @@ for i = 1:length(names)
     names{i} = [num2str(scores(i)) '% ' names{i} ];
 end
 legend(names,'Position',[0.18,0.2,0.30,0.2],'FontSize',14,'FontWeight','bold');
-saveas(gcf,saveImgPath,'psc2');
+% saveas(gcf,saveImgPath,'psc2');
+break;
 end
